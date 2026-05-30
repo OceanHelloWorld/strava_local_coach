@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "strava": {
+      "type": "stdio",
+      "command": "bash",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/server/_run.sh", "strava_server.py"],
+      "env": {
+        "STRAVA_CLIENT_ID": "${STRAVA_CLIENT_ID}",
+        "STRAVA_CLIENT_SECRET": "${STRAVA_CLIENT_SECRET}",
+        "STRAVA_DATA_DIR": "${STRAVA_DATA_DIR:-${HOME}/.config/strava-coach}"
+      }
+    }
+  }
+}

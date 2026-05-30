@@ -1,0 +1,5 @@
+# Fallback venv created by server/_run.sh when uv isn't installed
+server/.venv/
+__pycache__/
+*.pyc
+.uv/

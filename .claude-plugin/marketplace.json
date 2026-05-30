@@ -1,0 +1,14 @@
+{
+  "name": "your-plugins",
+  "owner": {
+    "name": "Your Name"
+  },
+  "description": "Personal Claude Code plugin marketplace",
+  "plugins": [
+    {
+      "name": "strava-coach",
+      "source": "./",
+      "description": "AI running coach with Strava integration: training plans, auto-graded runs, and a local activity browser."
+    }
+  ]
+}
