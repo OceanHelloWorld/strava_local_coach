@@ -1,7 +1,8 @@
 {
   "name": "your-plugins",
   "owner": {
-    "name": "Your Name"
+    "name": "OceanHelloWorld",
+    "url": "https://github.com/OceanHelloWorld/strava_local_coach"
   },
   "description": "Personal Claude Code plugin marketplace",
   "plugins": [

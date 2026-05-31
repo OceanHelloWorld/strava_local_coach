@@ -3,8 +3,10 @@
   "description": "Your AI running coach: build a personalized training plan, auto-grade your Strava runs against it each session, browse your activities in a local UI, and ask Claude anything about your training.",
   "version": "0.1.1",
   "author": {
-    "name": "Your Name"
+    "name": "OceanHelloWorld",
+    "url": "https://github.com/OceanHelloWorld/strava_local_coach"
   },
+  "homepage": "https://github.com/OceanHelloWorld/strava_local_coach",
   "keywords": ["strava", "running", "training", "coach", "fitness"],
   "license": "MIT"
 }
