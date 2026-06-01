@@ -4,5 +4,5 @@ version = "0.1.0"
 description = "MCP server + sync job for the strava-coach Claude Code plugin"
 requires-python = ">=3.10"
 # The only third-party dependency in the whole project. Strava HTTP, storage,
-# the OAuth flow, and the localhost UI all use the Python standard library.
+# and the OAuth flow all use the Python standard library.
 dependencies = ["mcp>=1.2.0"]

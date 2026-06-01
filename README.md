@@ -22,13 +22,29 @@ There's an [advanced track](#-advanced--developer-track) further down if you'd r
 | | |
 |---|---|
 | 📊 **Ask anything about your training** | "What was my fastest 10K this year?" · "Show heart-rate drift on Sunday's long run" · "Am I running my easy days too hard?" |
+| 🩺 **Get actionable feedback** | "How's my training going — what should I fix?" Claude critiques your recent runs (pacing discipline, easy/hard balance, progression) and hands back a prioritized to-do list. |
+| 🏁 **Post-race analysis** | "Analyze my marathon and tell me what to fix." Split-by-split breakdown, where/why you faded, and concrete changes for next time. |
 | 🎯 **Build a training plan** | Claude interviews you like a coach and writes a week-by-week, pace-targeted plan toward your goal race. |
+| 🗻 **Race-specific plans** | "Plan my training for *this* race." Tailors the plan to the actual course (elevation, terrain) and likely weather/heat for that location and date — not a generic distance plan. |
+| 🔮 **Race prediction** | "How will I do Sunday? I was sick Tuesday and slept badly." Projects a finish-time range from your fitness + course/weather + the real-life factors you tell it. |
 | ✅ **Auto-grade your runs** | Every time you start Claude, it quietly pulls new runs and grades them vs your plan (*Nailed it / On track / Off target / Missed*). |
-| 🖥️ **Browse runs locally** | A simple web page on your own computer to sync and click through your activities. |
 | 🔒 **Stays on your machine** | Your data lives in a folder on your computer. Nothing is uploaded anywhere except to Strava's own API to read your runs. |
 
 > **Note:** Strava only has data *after* you finish a run, so "live" here means a fresh pull each
 > time you ask — not real-time tracking during a run.
+
+---
+
+## Where it works
+
+This is a **Claude Code plugin** with a small local helper, so it runs wherever Claude Code does:
+
+| Client | Supported? | How |
+|---|---|---|
+| **Claude Code** (terminal, VS Code, JetBrains) | ✅ Yes | `/plugin install` — the [Quick start](#-quick-start-5-steps-10-minutes) below |
+| **Cowork** | ✅ Yes | Same plugin install flow as Claude Code |
+| **Claude Desktop** | ⚙️ Manual | The plugin marketplace isn't in Desktop yet; add the MCP server by hand (see [Claude Desktop setup](#claude-desktop-manual-mcp-setup)) |
+| **claude.ai website** | ❌ Not yet | The website only supports *remote* connectors, and can't run a local helper. See [the note on the website](#why-not-the-claudeai-website) |
 
 ---
 
@@ -111,9 +127,12 @@ Once connected, talk to Claude in plain English. A few to get you going:
 - *"Sync my Strava and summarize the last 4 weeks — mileage, average pace, and how hard I've been going."*
 - *"What pace should I aim for in a flat half marathon this weekend? Check my heart rate to see how much I had left in recent runs."*
 - *"Compare my two longest runs this month — was my heart rate higher for the same pace?"*
+- *"Look at my last month of running and give me honest feedback — what should I fix?"*
+- *"Analyze my marathon and tell me what to do differently next time."*
 - *"Build me a training plan for a sub-2:00 half marathon 12 weeks from now. I can run 4 days a week."*
+- *"Plan my training for the Napa Valley Marathon next March — factor in the course and the weather."*
+- *"How will I do at my 10K Sunday? I was sick Tuesday and haven't slept well this week."*
 - *"Did I run my easy days too fast last week?"*
-- *"Show the splits and where I slowed down in my marathon."*
 
 👉 See **[EXAMPLES.md](EXAMPLES.md)** for more prompts and what the answers look like.
 
@@ -128,16 +147,22 @@ against your plan.
 
 ---
 
-## 🖥️ Browse your runs in a web page (optional)
+## 🧠 The skills
 
-Prefer clicking over chatting? Run this in a terminal:
+Each capability is a separate **skill** Claude picks automatically from what you ask — you don't invoke
+them by name (except the two plan builders, which you *can* trigger with a slash command). Just talk
+naturally.
 
-```bash
-python3 "$(find ~/.claude/plugins -name ui.py | head -1)"
-```
+| Skill | Say something like… | What it does |
+|---|---|---|
+| **Ask anything** (`strava-analysis`) | "What was my fastest 10K this year?" | Answers questions and pulls trends/PRs/splits from your data |
+| **Run feedback** (`strava-run-feedback`) | "Give me honest feedback on my training" | Critiques recent runs → a prioritized top-3 list of fixes |
+| **Race feedback** (`strava-race-feedback`) | "Analyze my marathon" | Race post-mortem: splits, where/why you faded, 3 fixes for next time |
+| **Build a plan** (`strava-training-plan-create`) | `/strava-coach:strava-training-plan-create` | Coach-style interview → a full periodized, pace-targeted plan |
+| **Race-specific plan** (`strava-race-specific-plan`) | "Plan my training for the Boston Marathon" | A plan built around the real course (elevation/terrain) and the climate for that date — heat block, downhill-quad work, etc. |
+| **Race predictor** (`strava-race-predictor`) | "How will I do Sunday? I was sick this week" | Finish-time range from fitness + course/weather + the life factors you tell it |
 
-Open **<http://localhost:8722>** in your browser, click **Sync new** (or **Full backfill**), and click any
-run to load its details and heart-rate / pace graphs.
+See **[EXAMPLES.md](EXAMPLES.md)** for the full set of prompts and sample answers.
 
 ---
 
@@ -242,9 +267,8 @@ Claude Code.
 | `server/sync.py` | Capped incremental sync + run grading (also the SessionStart hook) |
 | `server/vdot.py` | VDOT pace bands + grading logic |
 | `server/store.py` | JSON file storage |
-| `server/ui.py` | The localhost activity browser |
 | `scripts/strava_login.py` | One-time OAuth bootstrap |
-| `skills/` | The "ask anything" and "create a plan" skills |
+| `skills/` | The six coaching skills (see [Skills](#-the-skills)) |
 | `hooks/hooks.json` | SessionStart auto-sync + grade |
 
 ### The MCP tools (for reference)
@@ -252,6 +276,45 @@ Claude Code.
 `get_athlete_profile` · `sync_activities` · `list_activities` · `get_activity` ·
 `get_activity_streams` · `get_training_plan` · `save_training_plan` · `compute_vdot_paces` ·
 `evaluate_progress`
+
+---
+
+## Claude Desktop (manual MCP setup)
+
+Claude Desktop doesn't have the Claude Code plugin marketplace yet, but it *is* an MCP client, so you can
+add the coach's server by hand. Do [Steps 2 & 4](#step-2--create-a-free-strava-api-app) above to create
+your Strava app and log in, clone this repo, then add this to your
+`claude_desktop_config.json` (Settings → Developer → Edit Config):
+
+```json
+{
+  "mcpServers": {
+    "strava": {
+      "command": "bash",
+      "args": ["/full/path/to/strava_local_coach/server/_run.sh", "strava_server.py"],
+      "env": {
+        "STRAVA_CLIENT_ID": "your_id",
+        "STRAVA_CLIENT_SECRET": "your_secret"
+      }
+    }
+  }
+}
+```
+
+Restart Desktop. You'll get the data tools (sync, list, analyze, plan) — the skills and the
+auto-grade-on-startup hook are Claude Code features and won't carry over.
+
+## Why not the claude.ai website?
+
+The website can only talk to **remote** connectors — servers reachable over the public internet that you
+authorize with OAuth. It can't launch a small local helper on your machine the way Claude Code and
+Desktop can, and it doesn't share Claude Code's plugin marketplace. So a *local* plugin like this one
+can't run there.
+
+Supporting the website would mean **hosting this as a remote service** (a server you run, holding each
+user's tokens) — a different project with real hosting and security responsibilities. If you only need
+the website, note that **Strava's own official MCP connector** works there directly — though it's
+**subscriber-only** (not available to free Strava accounts), whereas this plugin works for everyone.
 
 ---
 

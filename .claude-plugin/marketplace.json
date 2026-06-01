@@ -9,7 +9,7 @@
     {
       "name": "strava-coach",
       "source": "./",
-      "description": "AI running coach with Strava integration: training plans, auto-graded runs, and a local activity browser."
+      "description": "AI running coach with Strava integration: training plans, race-specific plans, post-race and training feedback, race prediction, and auto-graded runs."
     }
   ]
 }

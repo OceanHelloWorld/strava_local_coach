@@ -1,8 +1,7 @@
 """Fetch newly-logged Strava activities and grade them against the training plan.
 
-Used three ways:
+Used two ways:
   - the SessionStart hook:  `sync.py --grade --quiet`
-  - the localhost UI:       imported, calls sync_activities()
   - the MCP server:         imported, calls sync_activities() / grade_recent()
 
 Capping: every sync keeps at most 100 activities, none older than 365 days, and

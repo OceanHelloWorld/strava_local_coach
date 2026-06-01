@@ -2,7 +2,7 @@
 
 All state lives as plain JSON files under a single data directory so there is
 nothing to install (no database) and everything is human-readable. The data dir
-is shared by the MCP server, the sync job, and the localhost UI.
+is shared by the MCP server and the sync job.
 """
 
 import json

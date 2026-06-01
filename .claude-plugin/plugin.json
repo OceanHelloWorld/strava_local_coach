@@ -1,6 +1,6 @@
 {
   "name": "strava-coach",
-  "description": "Your AI running coach: build a personalized training plan, auto-grade your Strava runs against it each session, browse your activities in a local UI, and ask Claude anything about your training.",
+  "description": "Your AI running coach: build personalized and race-specific training plans, get post-race and training feedback, predict upcoming races, auto-grade your Strava runs each session, and ask Claude anything about your training.",
   "version": "0.1.1",
   "author": {
     "name": "OceanHelloWorld",
